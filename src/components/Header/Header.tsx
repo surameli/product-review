@@ -7,7 +7,7 @@ const Header = () => {
     <header className="flex justify-between items-center p-4 shadow-md bg-blue-50 sticky top-0 z-10 overflow-x-auto">
       {/* Logo */}
       <div
-        className="text-2xl font-bold ml-3 cursor-pointer"
+        className="text-2xl font-extrabold cursor-pointer transition-transform transform hover:scale-105 hover:text-blue-600"
         onClick={() => navigate("/")}
       >
         Product <span className="text-blue-600">Review</span>
