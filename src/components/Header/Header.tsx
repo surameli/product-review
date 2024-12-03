@@ -23,7 +23,7 @@ const Header = () => {
       {/* Buttons */}
       <div className="flex gap-4">
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          className="bg-blue-500 text-white px-2 py-2 rounded-md"
           onClick={() => navigate("/add-product")}
         >
           Add Product
@@ -31,7 +31,7 @@ const Header = () => {
 
         {/* Mobile Filter Button */}
         <button
-          className="md:hidden bg-blue-500 text-white px-4 py-2 rounded-md"
+          className="md:hidden bg-blue-500 text-white px-2 py-1 rounded-md"
           onClick={() => navigate("/filter")}
         >
           Filters
