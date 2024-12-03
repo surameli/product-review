@@ -157,7 +157,7 @@ const ProductDetailsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-6 p-4 w-2/3">
+    <div className="max-w-3xl mx-auto mt-6 p-4 ">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="flex justify-between items-center p-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
           <h2 className="text-xl font-semibold">{product?.name}</h2>
@@ -212,7 +212,7 @@ const ProductDetailsPage: React.FC = () => {
         <div className="mt-6">
           <button
             onClick={toggleReviewForm}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg w-full"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full"
           >
             {showReviewForm ? "Cancel" : "Write a Review"}
           </button>
