@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import service from '../../services/api';
 
 interface ProductInterface {
@@ -20,6 +20,8 @@ function HomePage() {
     const [maxPrice, setMaxPrice] = useState<number | ''>('');
     const [sortAttribute, setSortAttribute] = useState<string>('price');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const location = useLocation();
+    const searchResults: ProductInterface[] = location.state?.searchResults || [];
 
     // Fetch products
     useEffect(() => {
@@ -55,9 +57,13 @@ function HomePage() {
 
         // Sort by selected attribute
         if (sortOrder === 'asc') {
-            filtered.sort((a, b) => (a[sortAttribute as keyof ProductInterface] as number) - (b[sortAttribute as keyof ProductInterface] as number));
+            filtered.sort((a, b) =>
+                (a[sortAttribute as keyof ProductInterface] > b[sortAttribute as keyof ProductInterface] ? 1 : -1)
+            );
         } else {
-            filtered.sort((a, b) => (b[sortAttribute as keyof ProductInterface] as number) - (a[sortAttribute as keyof ProductInterface] as number));
+            filtered.sort((a, b) =>
+                (a[sortAttribute as keyof ProductInterface] < b[sortAttribute as keyof ProductInterface] ? 1 : -1)
+            );
         }
 
         setFilteredProducts(filtered);
@@ -92,18 +98,17 @@ function HomePage() {
                             type="number"
                             placeholder="Min"
                             value={minPrice}
-                            onChange={(e) => setMinPrice(Number(e.target.value) || '')}
+                            onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : '')}
                             className="w-1/2 border border-gray-300 rounded-md p-2"
                         />
                         <input
                             type="number"
                             placeholder="Max"
                             value={maxPrice}
-                            onChange={(e) => setMaxPrice(Number(e.target.value) || '')}
+                            onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : '')}
                             className="w-1/2 border border-gray-300 rounded-md p-2"
                         />
                     </div>
-                    <p className="mt-2">Price Range: {minPrice ? `Min: ${minPrice}` : 'No Min'} - {maxPrice ? `Max: ${maxPrice}` : 'No Max'}</p>
                 </div>
 
                 {/* Sorting Options */}
@@ -136,6 +141,32 @@ function HomePage() {
 
             {/* Product Listing */}
             <div className="flex-1 py-10 sm:ml-1/4 flex flex-wrap justify-center gap-4 overflow-y-auto h-screen">
+                {/* Search Results */}
+                {searchResults.length > 0 && (
+                    <div className="w-full">
+                        <h2 className="text-xl font-bold mb-4">Search Results</h2>
+                        {searchResults.map((product: ProductInterface) => (
+                            <div
+                                key={product.id}
+                                className="bg-white shadow-md rounded-lg p-4 flex flex-col items-start w-full sm:w-60 text-left"
+                            >
+                                <Link to={`/product/${product.id}`}>
+                                    <img
+                                        src={product.imageUrls}
+                                        alt={product.name}
+                                        className="w-full object-contain rounded-lg mb-4 cursor-pointer sm:h-60"
+                                    />
+                                </Link>
+                                <div className="justify-between items-center w-full">
+                                    <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                                    <p className="text-lg text-gray-900">${product.price}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Filtered Products */}
                 {loading ? (
                     <div className="flex justify-center items-center w-full">
                         <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
@@ -143,7 +174,7 @@ function HomePage() {
                         </div>
                     </div>
                 ) : filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => (
+                    filteredProducts.map((product: ProductInterface) => (
                         <div
                             key={product.id}
                             className="bg-white shadow-md rounded-lg p-4 flex flex-col items-start w-full sm:w-60 text-left"
@@ -152,10 +183,10 @@ function HomePage() {
                                 <img
                                     src={product.imageUrls}
                                     alt={product.name}
-                                    className="w-full  object-contain rounded-lg mb-4 cursor-pointer sm:h-60"
+                                    className="w-full object-contain rounded-lg mb-4 cursor-pointer sm:h-60"
                                 />
                             </Link>
-                            <div className=" justify-between items-center w-full">
+                            <div className="justify-between items-center w-full">
                                 <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
                                 <p className="text-lg text-gray-900">${product.price}</p>
                             </div>

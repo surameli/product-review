@@ -18,14 +18,14 @@ const Header = () => {
 
     try {
       const response = await axios.get(
-        `https://test-api.nova-techs.com/products?name=${searchQuery}`
+        `https://test-api.nova-techs.com/products?category=${searchQuery}`
       );
-      const data = response.data; // Axios automatically parses the JSON
-        console.log(response.data.data);
-        
+      const data = response.data.data; // Axios automatically parses the JSON
+      console.log(data);
+
       if (data.length > 0) {
-        // Navigate to the search results page and pass the search results
-        navigate(`/search?query=${searchQuery}`, { state: { products: data } });
+        // Navigate to HomePage.tsx and pass search results as state
+        navigate("/", { state: { searchResults: data } });
       } else {
         alert("No products found.");
       }
@@ -34,7 +34,6 @@ const Header = () => {
       alert("Error occurred while searching.");
     }
   };
-
   // Handle form submission (optional, if you want the user to press Enter)
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +51,7 @@ const Header = () => {
       </div>
 
       {/* Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="flex w-full max-w-lg items-center">
+      <form onSubmit={handleSearchSubmit} className="flex w-full max-w-lg items-center max-sm:hidden">
         <input
           type="text"
           placeholder="Search for products..."
